@@ -1,13 +1,16 @@
 package com.github.erdragh.app;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+import org.lwjgl.Version;
+
+public class App {
+    //The window handle
+    private long window;
+
+    public void run() {
+        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+    }
+
+    public static void main(String[] args) {
+        new App().run();
     }
 }
