@@ -18,13 +18,13 @@ public class TestGame implements IGameLogic {
     }
 
     @Override
-    public void init() throws Exception {
-        renderer.init();
+    public void init(Window window) throws Exception {
+        renderer.init(window);
         float[] positions = new float[] {
-            -0.5f,  0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.5f,  0.5f, 0.0f
+            -0.5f,  0.5f, -1.0f,
+            -0.5f, -0.5f, -1.0f,
+             0.5f, -0.5f, -1.0f,
+             0.5f,  0.5f, -1.0f
         };
         float[] colors = new float[]{
             0.5f, 0.0f, 0.0f,

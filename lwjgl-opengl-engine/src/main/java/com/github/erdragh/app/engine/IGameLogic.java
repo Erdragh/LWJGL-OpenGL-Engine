@@ -1,7 +1,7 @@
 package com.github.erdragh.app.engine;
 
 public interface IGameLogic {
-    void init() throws Exception;
+    void init(Window window) throws Exception;
 
     void input(Window window);
 

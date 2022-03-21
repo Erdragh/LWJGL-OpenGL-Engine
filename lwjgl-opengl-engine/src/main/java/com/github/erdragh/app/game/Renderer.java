@@ -14,18 +14,29 @@ import com.github.erdragh.app.engine.Window;
 import com.github.erdragh.app.engine.graphics.Mesh;
 import com.github.erdragh.app.engine.graphics.ShaderProgram;
 
+import org.joml.Matrix4f;
+
 public class Renderer {
+
+    private static final float FOV = (float) Math.toRadians(60.0f);
+    private static final float Z_NEAR = 0.01f, Z_FAR = 1000.f;
+
+    private Matrix4f projectionMatrix;
 
     private ShaderProgram shaderProgram;
 
     public Renderer() {        
     }
     
-    public void init() throws Exception { 
+    public void init(Window window) throws Exception { 
         shaderProgram = new ShaderProgram();
         shaderProgram.createVertexShader(Utils.loadResource("/vertex.vs"));       
         shaderProgram.createFragmentShader(Utils.loadResource("/fragment.fs"));
         shaderProgram.link();
+
+        float aspectRatio = (float) window.getWidth() / window.getHeight();
+        projectionMatrix = new Matrix4f().setPerspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
+        shaderProgram.createUniform("projectionMatrix");
     }
 
     public void clear() {
@@ -41,6 +52,7 @@ public class Renderer {
         }
 
         shaderProgram.bind();
+        shaderProgram.setUniform("projectionMatrix", projectionMatrix);
 
         //Draw the Mesh
         glBindVertexArray(mesh.getVaoId());
