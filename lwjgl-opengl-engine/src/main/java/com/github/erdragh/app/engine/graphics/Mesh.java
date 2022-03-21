@@ -1,9 +1,12 @@
 package com.github.erdragh.app.engine.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL15.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
@@ -80,6 +83,16 @@ public class Mesh {
 
     public int getVertexCount() {
         return vertexCount;
+    }
+
+    public void render() {
+        //Draw the mesh
+        glBindVertexArray(getVaoId());
+
+        glDrawElements(GL_TRIANGLES, getVertexCount(), GL_UNSIGNED_INT, 0);
+
+        //Restore state
+        glBindVertexArray(0);
     }
 
     public void cleanup() {
