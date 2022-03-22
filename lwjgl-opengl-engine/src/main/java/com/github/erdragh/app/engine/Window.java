@@ -75,6 +75,8 @@ public class Window {
         glClearColor(0.0f,0.0f,0.0f,0.0f);
 
         glPrintDebugInformation();
+
+        glEnable(GL_DEPTH_TEST);
     }
 
     public void setClearColor(float r, float g, float b, float alpha) {
