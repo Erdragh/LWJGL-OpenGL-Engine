@@ -9,6 +9,7 @@ import com.github.erdragh.app.engine.GameItem;
 import com.github.erdragh.app.engine.Utils;
 import com.github.erdragh.app.engine.Window;
 import com.github.erdragh.app.engine.graphics.Camera;
+import com.github.erdragh.app.engine.graphics.Mesh;
 import com.github.erdragh.app.engine.graphics.ShaderProgram;
 import com.github.erdragh.app.engine.graphics.Transformation;
 
@@ -38,6 +39,9 @@ public class Renderer {
         shaderProgram.createUniform("projectionMatrix");
         shaderProgram.createUniform("modelViewMatrix");
         shaderProgram.createUniform("texture_sampler");
+        //Create uniform for default color and the useColor flag
+        shaderProgram.createUniform("color");
+        shaderProgram.createUniform("useColor");
 
         window.setClearColor(0f,0f,0f,0f);
     }
@@ -67,11 +71,14 @@ public class Renderer {
 
         //Render each gameItem
         for (GameItem gameItem : gameItems) {
+            Mesh mesh = gameItem.getMesh();
             //Set model view matrix for this item
             Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
             shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
             //Render the mesh for this game item
-            gameItem.getMesh().render();
+            shaderProgram.setUniform("color", mesh.getColor());
+            shaderProgram.setUniform("useColor", mesh.isTextured() ? 0 : 1);
+            mesh.render();
         }
 
         shaderProgram.unbind();
