@@ -31,11 +31,10 @@ import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
 public class Mesh {
-    private static final Vector3f DEFAULT_COLOR = new Vector3f(1.0f,1.0f,1.0f);
     private final int vaoId, vertexCount;
     private final List<Integer> vboIdList;
-    private Texture texture;
-    private Vector3f color;
+    
+    private Material material;
 
     public Mesh(float[] positions, float[] textCoords, float[] normals, int[] indices) {
         FloatBuffer posBuffer = null;
@@ -44,7 +43,6 @@ public class Mesh {
         IntBuffer indicesBuffer = null;
 
         try {
-            color = Mesh.DEFAULT_COLOR;
             vertexCount = indices.length;
             vboIdList = new ArrayList<>();
 
@@ -107,24 +105,12 @@ public class Mesh {
         }
     }
 
-    public boolean isTextured() {
-        return this.texture != null;
+    public Material getMaterial() {
+        return material;
     }
 
-    public Texture getTexture() {
-        return texture;
-    }
-
-    public void setTexture(Texture texture) {
-        this.texture = texture;
-    }
-
-    public void setColor(Vector3f color) {
-        this.color = color;
-    }
-
-    public Vector3f getColor() {
-        return color;
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 
     public int getVaoId() {
@@ -136,6 +122,7 @@ public class Mesh {
     }
 
     public void render() {
+        Texture texture = material.getTexture();
         if (texture != null) {    
             //Activate the first texture bank
             glActiveTexture(GL_TEXTURE0);
@@ -163,6 +150,7 @@ public class Mesh {
         }
 
         //delete the texture
+        Texture texture = material.getTexture();
         if (texture != null) {
             texture.cleanup();
         }
