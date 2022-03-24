@@ -14,7 +14,7 @@ public class Window {
     private long window;
     private int width, height;
     private final String title;
-    private boolean resized, vSync;
+    private boolean resized, vSync, wireframe;
 
     public Window(String title, int width, int height, boolean vSync) {
         this.title = title;
@@ -77,7 +77,15 @@ public class Window {
         glPrintDebugInformation();
 
         glEnable(GL_DEPTH_TEST);
-        // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    }
+
+    public void toggleWireFrame() {
+        if (wireframe) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        } else {
+            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        }
+        wireframe = !wireframe;
     }
 
     public long getWindowHandle() {

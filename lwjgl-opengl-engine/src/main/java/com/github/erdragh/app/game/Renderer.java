@@ -9,6 +9,7 @@ import com.github.erdragh.app.engine.GameItem;
 import com.github.erdragh.app.engine.Utils;
 import com.github.erdragh.app.engine.Window;
 import com.github.erdragh.app.engine.graphics.Camera;
+import com.github.erdragh.app.engine.graphics.DirectionalLight;
 import com.github.erdragh.app.engine.graphics.Mesh;
 import com.github.erdragh.app.engine.graphics.PointLight;
 import com.github.erdragh.app.engine.graphics.ShaderProgram;
@@ -51,13 +52,14 @@ public class Renderer {
         shaderProgram.createUniform("specularPower");
         shaderProgram.createUniform("ambientLight");
         shaderProgram.createPointLightUniform("pointLight");
+        shaderProgram.createDirectionalLightUniform("directionalLight");
     }
 
     public void clear() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    public void render(Window window, Camera camera, GameItem[] gameItems, Vector3f ambientLight, PointLight pointLight) {
+    public void render(Window window, Camera camera, GameItem[] gameItems, Vector3f ambientLight, PointLight pointLight, DirectionalLight directionalLight) {
         clear();
 
         if (window.isResized()) {
@@ -87,6 +89,19 @@ public class Renderer {
         lightPos.y = aux.y;
         lightPos.z = aux.z;
         shaderProgram.setUniform("pointLight", currPointLight);
+
+        // Vector3f lightPos = pointLight.getPosition();
+        // Vector4f aux = new Vector4f(lightPos.x, lightPos.y, lightPos.z, 1);
+        // aux.mul(viewMatrix);
+        // Vector3f viewLightPos = new Vector3f(aux.x,aux.y,aux.z);
+        // PointLight viewLight = new PointLight(pointLight.getColor(), viewLightPos, pointLight.getIntensity(), pointLight.getAttenuation());
+        // shaderProgram.setUniform("pointLight", viewLight);
+
+        DirectionalLight currDirrLight = new DirectionalLight(directionalLight);
+        Vector4f dir = new Vector4f(currDirrLight.getDirection(), 0);
+        dir.mul(viewMatrix);
+        currDirrLight.setDirection(new Vector3f(dir.x, dir.y, dir.z));
+        shaderProgram.setUniform("directionalLight", currDirrLight);
 
         shaderProgram.setUniform("texture_sampler", 0);
 
